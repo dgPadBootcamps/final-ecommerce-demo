@@ -1,9 +1,14 @@
 package com.dgpad.ecommerceuserdemo.model;
 
+import com.dgpad.ecommerceuserdemo.model.DTOs.CartItemDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -14,6 +19,7 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JsonIgnore
     private User user;
     @ManyToOne
     private Product product;
@@ -24,4 +30,5 @@ public class CartItem {
         this.product = product;
         this.quantity = quantity;
     }
+
 }

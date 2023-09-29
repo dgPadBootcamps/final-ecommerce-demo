@@ -1,6 +1,7 @@
 package com.dgpad.ecommerceuserdemo.service;
 
 import com.dgpad.ecommerceuserdemo.model.CartItem;
+import com.dgpad.ecommerceuserdemo.model.DTOs.CartItemDTO;
 import com.dgpad.ecommerceuserdemo.model.Product;
 import com.dgpad.ecommerceuserdemo.repository.CartItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
@@ -35,5 +37,15 @@ public class CartItemService {
 
     public List<CartItem> getUserCartItems(UUID id){
         return cartItemRepository.findCartItemsByUserId(id);
+    }
+
+    public CartItemDTO mapToDTO(CartItem cartItem){
+        return new CartItemDTO(cartItem.getId(),cartItem.getProduct().getId(),cartItem.getProduct().getName(),cartItem.getProduct().getPrice(),cartItem.getQuantity());
+    }
+
+    public  List<CartItemDTO> convertToDTOList(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -35,7 +35,7 @@ public class CartRestController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/add-item",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-item",  produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('user')")
     public ResponseEntity<?> createCartItem(@RequestParam Long productId, @RequestParam Integer quantity, Authentication authentication){
         if(Objects.isNull(productService.getProductById(productId)))
@@ -58,7 +58,7 @@ public class CartRestController {
     @PreAuthorize("hasAnyAuthority('admin')")
     public ResponseEntity<?> getCartItems(){
         try{
-            return new ResponseEntity<>(cartItemService.getCartItems(), HttpStatus.OK);
+            return new ResponseEntity<>(cartItemService.convertToDTOList(cartItemService.getCartItems()), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -72,7 +72,7 @@ public class CartRestController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             UserInfoDetails userInfoDetails = (UserInfoDetails) userDetails;
 
-            return new ResponseEntity<>(cartItemService.getUserCartItems(userInfoDetails.getUserId()), HttpStatus.OK);
+            return new ResponseEntity<>(cartItemService.convertToDTOList(cartItemService.getUserCartItems(userInfoDetails.getUserId())), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
